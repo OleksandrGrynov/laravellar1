@@ -13,7 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
 
         $middleware->alias([
-            'gate' => \App\Http\Middleware\GateWordMiddleware::class,
+            'query.mode' => \App\Http\Middleware\QueryModeMiddleware::class,
         ]);
 
 

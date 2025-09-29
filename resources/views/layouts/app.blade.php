@@ -1,13 +1,32 @@
 <!doctype html>
-<html lang="en">
+<html lang="uk">
 <head>
     <meta charset="utf-8">
-    <title>@yield('title','Demo')</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>body{font-family:system-ui,Segoe UI,Roboto,Ubuntu,Arial,sans-serif}main{max-width:900px;margin:24px auto;padding:0 16px}</style>
+    <title>@yield('title', 'Laravel Lab Project')</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+        main {
+            flex: 1;
+        }
+        footer {
+            margin-top: auto;
+        }
+    </style>
 </head>
 <body>
-<x-menu />
-<main>@yield('content')</main>
+<x-header />
+<x-nav />
+
+<main class="container py-3">
+    @yield('content')
+</main>
+
+<x-footer />
 </body>
 </html>
