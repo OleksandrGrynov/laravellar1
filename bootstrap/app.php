@@ -12,12 +12,14 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
 
+        // 🔹 Зареєструй тут усі свої middleware
         $middleware->alias([
             'query.mode' => \App\Http\Middleware\QueryModeMiddleware::class,
+            'is_admin'   => \App\Http\Middleware\IsAdmin::class,
         ]);
-
 
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
-    })->create();
+    })
+    ->create();

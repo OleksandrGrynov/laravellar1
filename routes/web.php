@@ -1,17 +1,84 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\{LabController, HomeController, PostController};
+use App\Http\Controllers\AnimalController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AdminController;
 
-// ЛР1
-Route::middleware(['web','query.mode'])->group(function () {
-    Route::get('/lab',        [LabController::class, 'index'])->name('lab.index');
-    Route::get('/lab/about',  [LabController::class, 'about'])->name('lab.about');
-    Route::get('/lab/status', [LabController::class, 'status'])->name('lab.status');
-    Route::get('/lab/echo',   [LabController::class, 'echo'])->name('lab.echo');
+/*
+|--------------------------------------------------------------------------
+| Публічна частина сайту
+|--------------------------------------------------------------------------
+*/
+
+// Головна сторінка та "Про нас"
+Route::view('/', 'pages.home')->name('home');
+Route::view('/about', 'pages.about')->name('about');
+
+// Каталог тварин (тільки перегляд)
+Route::resource('animals', AnimalController::class)->only(['index', 'show']);
+
+// Кошик
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/{animal}', [CartController::class, 'add'])->name('cart.add');
+Route::delete('/cart/{animal}', [CartController::class, 'remove'])->name('cart.remove');
+Route::delete('/cart', [CartController::class, 'clear'])->name('cart.clear');
+
+// Оформлення замовлення
+Route::get('/checkout', [OrderController::class, 'create'])->name('checkout');
+Route::post('/checkout', [OrderController::class, 'store'])->name('checkout.store');
+Route::view('/thank-you', 'cart.thankyou')->name('thankyou');
+
+/*
+|--------------------------------------------------------------------------
+| Авторизовані користувачі
+|--------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+    // Профіль користувача
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Історія замовлень користувача
+    Route::get('/my-orders', [OrderController::class, 'myOrders'])->name('orders.mine');
 });
 
-// ЛР3
-Route::get('/',        [HomeController::class, 'index'])->name('home');
-Route::get('/about',   [HomeController::class, 'about'])->name('about');
-Route::get('/posts',   [PostController::class, 'index'])->name('posts.index');
+/*
+|--------------------------------------------------------------------------
+| Адмін-панель
+|--------------------------------------------------------------------------
+*/
+Route::prefix('admin')
+    ->name('admin.')
+    ->middleware(['auth', 'is_admin'])
+    ->group(function () {
+
+        // Головна сторінка адмінки
+        Route::get('/', [AdminController::class, 'index'])->name('dashboard');
+
+        // CRUD для тварин
+        Route::resource('animals', AnimalController::class)->except(['index', 'show']);
+
+        // Замовлення
+        Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
+        Route::get('orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+        Route::patch('orders/{order}', [AdminController::class, 'updateStatus'])->name('updateStatus');
+    });
+Route::prefix('admin')
+    ->name('admin.')
+    ->middleware(['auth', 'is_admin'])
+    ->group(function () {
+        Route::get('/check', function () {
+            return '✅ Admin middleware працює!';
+        });
+    });
+
+/*
+|--------------------------------------------------------------------------
+| Auth маршрути (Breeze)
+|--------------------------------------------------------------------------
+*/
+require __DIR__.'/auth.php';
