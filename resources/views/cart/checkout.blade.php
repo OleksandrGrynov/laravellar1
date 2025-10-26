@@ -10,11 +10,24 @@
 
         <form action="{{ route('checkout.store') }}" method="POST" class="space-y-3">
             @csrf
-            <input name="customer_name" class="w-full border rounded p-2" placeholder="Ім'я та прізвище" required>
-            <input name="customer_phone" class="w-full border rounded p-2" placeholder="Телефон" required>
-            <input name="customer_email" class="w-full border rounded p-2" placeholder="Email (необов'язково)">
-            <textarea name="note" class="w-full border rounded p-2" rows="3" placeholder="Коментар (необов'язково)"></textarea>
-            <button class="btn btn-blue w-full">Підтвердити замовлення</button>
+
+            <form action="{{ route('checkout.store') }}" method="POST" class="space-y-3 need-validation">
+                @csrf
+                <input name="customer_name" class="w-full border rounded p-2" placeholder="Ім'я та прізвище" required>
+
+                {{-- 📞 Телефон з маскою --}}
+                <input name="customer_phone"
+                       type="tel"
+                       class="w-full border rounded p-2 phone-input"
+                       placeholder="+380 (__) ___-____"
+                       required>
+
+                <input name="customer_email" class="w-full border rounded p-2" placeholder="Email (необов'язково)">
+                <textarea name="note" class="w-full border rounded p-2" rows="3" placeholder="Коментар (необов'язково)"></textarea>
+                <button class="btn btn-blue w-full">Підтвердити замовлення</button>
+            </form>
+
+
         </form>
     </div>
 @endsection

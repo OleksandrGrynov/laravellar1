@@ -15,6 +15,9 @@
 <body class="font-sans antialiased flex flex-col min-h-screen bg-gray-100">
 <div class="flex-grow">
     @include('layouts.navigation')
+    @auth
+        <a href="{{ route('orders.mine') }}">📦 Мої замовлення</a>
+    @endauth
 
     @isset($header)
         <header class="bg-white shadow">
@@ -35,5 +38,10 @@
         <p class="text-sm">Розробив: Олександр</p>
     </div>
 </footer>
+{{-- Маска для телефону --}}
+<script src="https://unpkg.com/imask"></script>
+<script src="{{ asset('js/phone-mask.js') }}"></script>
+@stack('modals')
+
 </body>
 </html>

@@ -1,0 +1,597 @@
+/* =======================
+   КАТАЛОГ ТВАРИН (index)
+   ======================= */
+
+.catalog-container {
+    max-width: 1200px;
+    margin: 50px auto;
+    padding: 0 20px;
+}
+
+.catalog-title {
+    text-align: center;
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 40px;
+}
+
+.cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+}
+
+.animal-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 320px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: 0.3s ease;
+}
+
+.animal-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.animal-image {
+    height: 220px;
+    background: #f3f3f3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.animal-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.no-photo {
+    color: #888;
+    font-size: 14px;
+}
+
+.animal-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 16px;
+    min-height: 220px;
+}
+
+.animal-text h2 {
+    font-size: 18px;
+    margin-bottom: 6px;
+}
+
+.species {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.desc {
+    color: #333;
+    font-size: 14px;
+    line-height: 1.4;
+    height: 40px;
+    overflow: hidden;
+}
+
+.animal-bottom {
+    margin-top: 15px;
+}
+
+.price {
+    color: #1e9d4a;
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 12px;
+}
+
+.buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.btn {
+    flex: 1;
+    display: inline-block;
+    text-align: center;
+    padding: 8px 0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.3s ease;
+    text-decoration: none;
+}
+
+/* кнопка "Детальніше" */
+.btn.details {
+    background: #f0f0f0;
+    color: #222;
+    border: 1px solid #ddd;
+}
+
+.btn.details:hover {
+    background: #e4e4e4;
+}
+
+/* кнопка "До кошика" */
+.btn.cart {
+    background: #007bff;
+    color: white;
+    border: none;
+}
+
+.btn.cart:hover {
+    background: #0056d2;
+}
+
+.empty {
+    text-align: center;
+    color: #777;
+    margin-top: 40px;
+    font-size: 16px;
+}
+
+/* =======================
+   СТОРІНКА ДЕТАЛЬНОГО ПЕРЕГЛЯДУ (show)
+   ======================= */
+
+.animal-page {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 20px;
+    background: #f6f6f6;
+    min-height: 80vh;
+}
+
+.animal-card-large {
+    display: flex;
+    flex-wrap: wrap;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+    overflow: hidden;
+    max-width: 850px;          /* ✅ фіксована ширина сторінки */
+    margin: 0 auto;
+}
+
+/* Фото */
+.animal-photo {
+    width: 380px;              /* ✅ ширина блоку з фото */
+    height: 350px;             /* ✅ фіксована висота */
+    background: #f2f2f2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-right: 1px solid #eee;
+}
+
+.animal-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;         /* ✅ зберігає пропорції */
+    object-position: center;
+    transition: transform 0.4s ease;
+}
+
+.animal-photo img:hover {
+    transform: scale(1.03);
+}
+
+/* Інформація */
+.animal-info-block {
+    flex: 1;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.animal-name {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.animal-species {
+    color: #555;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.animal-desc {
+    color: #333;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.animal-price {
+    color: #1e9d4a;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.animal-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.animal-form input {
+    width: 70px;
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn.cart {
+    background: #007bff;
+    color: #fff;
+    border: none;
+}
+
+.btn.cart:hover {
+    background: #005ed1;
+}
+
+.btn.back {
+    background: #eee;
+    color: #333;
+    align-self: flex-start;
+}
+
+.btn.back:hover {
+    background: #ddd;
+}
+
+/* --- адаптив --- */
+@media (max-width: 850px) {
+    .animal-card-large {
+        flex-direction: column;
+        max-width: 95%;
+    }
+
+    .animal-photo {
+        width: 100%;
+        height: 300px;
+        border-right: none;
+        border-bottom: 1px solid #eee;
+    }
+}
+.cart-container {
+    max-width: 800px;
+    margin: 50px auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 14px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.cart-title {
+    text-align: center;
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+.cart-empty {
+    text-align: center;
+    color: #777;
+}
+
+.cart-items {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    background: #fafafa;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.cart-item img {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.cart-info {
+    flex: 1;
+}
+
+.cart-info h3 {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.cart-info .price {
+    color: #1e9d4a;
+    font-weight: bold;
+}
+
+.cart-qty-form {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.cart-qty-form input {
+    width: 60px;
+    padding: 4px 6px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.cart-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.cart-total {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* Кнопки */
+.btn {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.btn.blue {
+    background: #007bff;
+    color: #fff;
+}
+
+.btn.blue:hover {
+    background: #005ed1;
+}
+
+.btn.red {
+    background: #ff5555;
+    color: #fff;
+}
+
+.btn.red:hover {
+    background: #e13e3e;
+}
+
+.btn.small {
+    padding: 5px 10px;
+    font-size: 13px;
+}
+.phone-input.invalid {
+    border-color: #e3342f !important;
+    box-shadow: 0 0 0 3px rgba(227, 52, 47, 0.2);
+}
+.filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 25px;
+    background: #fff;
+    padding: 10px 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.filter-bar input,
+.filter-bar select {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.filter-bar .btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 7px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.filter-bar .btn.clear {
+    background: #f0f0f0;
+    color: #333;
+}
+/* ====== МОДАЛЬНІ ВІКНА ====== */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal.show {
+    display: flex;
+    opacity: 1;
+}
+
+.modal.hidden {
+    display: none !important;
+}
+
+.modal-content {
+    background: #fff;
+    border-radius: 14px;
+    padding: 25px;
+    width: 420px;
+    max-width: 90%;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+    transform: translateY(-20px);
+    transition: all 0.3s ease;
+}
+
+.modal.show .modal-content {
+    transform: translateY(0);
+}
+
+.modal-content.small {
+    width: 340px;
+}
+
+.modal-content img {
+    max-width: 100%;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.modal-content h2 {
+    margin-bottom: 8px;
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.modal-content p {
+    margin-bottom: 8px;
+    color: #444;
+}
+
+.modal-content .price {
+    color: #1e9d4a;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.modal .close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 22px;
+    color: #555;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.modal .close:hover {
+    color: #000;
+}
+
+.btn.cart {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn.cart:hover {
+    background: #005ed1;
+}
+.orders-container {
+    max-width: 1000px;
+    margin: 40px auto;
+    background: #fff;
+    border-radius: 14px;
+    padding: 30px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+}
+
+.orders-title {
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+
+.orders-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+}
+
+.orders-table th, .orders-table td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+}
+
+.orders-table th {
+    background: #f9f9f9;
+    font-weight: 600;
+}
+
+.status {
+    padding: 6px 10px;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.status.new { background: #3b82f6; }       /* синій */
+.status.paid { background: #22c55e; }      /* зелений */
+.status.shipped { background: #f59e0b; }   /* жовтий */
+.status.done { background: #16a34a; }      /* темно-зелений */
+.status.canceled { background: #ef4444; }  /* червоний */
+
+details summary {
+    cursor: pointer;
+    color: #007bff;
+}
+
+details ul {
+    margin: 5px 0 0 0;
+    padding-left: 0;
+    list-style: none;
+    text-align: left;
+}
+
+.pagination {
+    margin-top: 20px;
+    text-align: center;
+}

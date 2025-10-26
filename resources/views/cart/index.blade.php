@@ -1,42 +1,58 @@
 @extends('layouts.app')
-@section('title','Кошик')
+@section('title', 'Кошик')
+
 @section('content')
-    <div class="max-w-5xl mx-auto">
-        <h1 class="text-2xl font-bold mb-4">🛒 Кошик</h1>
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+
+    <div class="cart-container">
+        <h1 class="cart-title">🛒 Кошик</h1>
 
         @if(empty($cart))
-            <p class="text-gray-600">Кошик порожній.</p>
+            <p class="cart-empty">Кошик порожній 😿</p>
         @else
-            <div class="space-y-3">
-                @foreach($cart as $item)
-                    <div class="bg-white p-4 rounded shadow flex items-center gap-4">
-                        @if($item['image'])
-                            <img src="{{ asset('storage/'.$item['image']) }}" class="w-20 h-20 object-cover rounded">
+            <div class="cart-items">
+                @foreach($cart as $id => $item)
+                    <div class="cart-item">
+                        @if(!empty($item['image']))
+                            <img src="{{ asset('storage/'.$item['image']) }}" alt="{{ $item['name'] }}">
                         @endif
-                        <div class="flex-1">
-                            <div class="font-semibold">{{ $item['name'] }}</div>
-                            <div class="text-sm text-gray-500">{{ $item['species'] }}</div>
+
+                        <div class="cart-info">
+                            <h3>{{ $item['name'] }}</h3>
+                            <p>Ціна: {{ number_format($item['price'], 2) }} ₴</p>
+                            <p>Сума: <strong>{{ number_format($item['price'] * $item['quantity'], 2) }} ₴</strong></p>
                         </div>
-                        <div class="font-semibold">{{ number_format($item['price'],2) }} ₴</div>
-                        <form action="{{ route('cart.remove',$item['id']) }}" method="POST">
-                            @csrf @method('DELETE')
-                            <button class="btn btn-red">✖</button>
+
+                        <form action="{{ route('cart.update', $id) }}" method="POST" class="cart-qty-form">
+                            @csrf
+                            @method('PATCH')
+                            <input type="number" name="quantity" value="{{ $item['quantity'] ?? 1 }}" min="1" max="10">
+                            <button type="submit" class="btn blue small">Оновити</button>
+                        </form>
+
+                        <form action="{{ route('cart.remove', $id) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn red small">✖</button>
                         </form>
                     </div>
                 @endforeach
             </div>
 
-            <div class="flex justify-between items-center mt-6">
+            <div class="cart-footer">
                 <form action="{{ route('cart.clear') }}" method="POST">
-                    @csrf @method('DELETE')
-                    <button class="btn btn-red">Очистити</button>
+                    @csrf
+                    @method('DELETE')
+                    <button class="btn red">Очистити кошик</button>
                 </form>
-                <div class="text-xl font-bold">Разом: {{ number_format($total,2) }} ₴</div>
-            </div>
 
-            <div class="mt-4 text-right">
-                <a href="{{ route('checkout') }}" class="btn btn-blue">Оформити замовлення</a>
+                <div class="cart-total">
+                    Разом: <strong>{{ number_format($total, 2) }} ₴</strong>
+                </div>
+
+                <a href="{{ route('checkout') }}" class="btn blue">Оформити замовлення</a>
             </div>
         @endif
     </div>
+
 @endsection

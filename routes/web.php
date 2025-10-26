@@ -21,15 +21,20 @@ Route::view('/about', 'pages.about')->name('about');
 Route::resource('animals', AnimalController::class)->only(['index', 'show']);
 
 // Кошик
+// 🛒 Кошик
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart/{animal}', [CartController::class, 'add'])->name('cart.add');
+Route::patch('/cart/{id}', [CartController::class, 'update'])->name('cart.update');
 Route::delete('/cart/{animal}', [CartController::class, 'remove'])->name('cart.remove');
 Route::delete('/cart', [CartController::class, 'clear'])->name('cart.clear');
+Route::post('/cart/ajax-update', [CartController::class, 'ajaxUpdate'])->name('cart.ajaxUpdate');
+
 
 // Оформлення замовлення
 Route::get('/checkout', [OrderController::class, 'create'])->name('checkout');
 Route::post('/checkout', [OrderController::class, 'store'])->name('checkout.store');
 Route::view('/thank-you', 'cart.thankyou')->name('thankyou');
+
 
 /*
 |--------------------------------------------------------------------------
@@ -44,6 +49,9 @@ Route::middleware('auth')->group(function () {
 
     // Історія замовлень користувача
     Route::get('/my-orders', [OrderController::class, 'myOrders'])->name('orders.mine');
+});
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('animals', App\Http\Controllers\Admin\AnimalAdminController::class);
 });
 
 /*

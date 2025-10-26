@@ -26,7 +26,8 @@ class AnimalController extends Controller
         }
 
         $animals = $q->paginate(9)->withQueryString();
-        return view('animals.index', compact('animals'));
+        $categories = \App\Models\Category::all();
+        return view('animals.index', compact('animals', 'categories'));
     }
 
     public function create()

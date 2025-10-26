@@ -1,54 +1,125 @@
 @extends('layouts.app')
-@section('title','Каталог тварин')
+
+@section('title', 'Каталог тварин')
 
 @section('content')
-    <div class="max-w-7xl mx-auto">
-        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-6">
-            <h1 class="text-2xl font-bold">🐾 Каталог тварин</h1>
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <script src="{{ asset('js/modal.js') }}" defer></script>
 
-            <form method="GET" class="flex flex-wrap gap-2 items-center">
-                <input name="q" value="{{ request('q') }}" class="border rounded p-2" placeholder="Пошук…">
-                @php($cats = \App\Models\Category::orderBy('name')->get())
-                <select name="category_id" class="border rounded p-2">
-                    <option value="">Всі категорії</option>
-                    @foreach($cats as $c)
-                        <option value="{{ $c->id }}" @selected(request('category_id')==$c->id)>{{ $c->name }}</option>
-                    @endforeach
-                </select>
-                <input name="min" value="{{ request('min') }}" class="border rounded p-2 w-28" placeholder="Ціна від">
-                <input name="max" value="{{ request('max') }}" class="border rounded p-2 w-28" placeholder="до">
-                <button class="btn btn-blue">Фільтрувати</button>
-                <a href="{{ route('animals.index') }}" class="btn btn-yellow">Скинути</a>
-            </form>
-        </div>
+    <div class="catalog-container">
+        <h1 class="catalog-title">🐾 Каталог тварин</h1>
 
         @if($animals->count())
-            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                @foreach($animals as $a)
-                    <div class="bg-white rounded-xl shadow overflow-hidden hover:shadow-lg transition">
-                        <img src="{{ $a->image ? asset('storage/'.$a->image) : 'https://placehold.co/600x400?text=No+photo' }}"
-                             class="h-48 w-full object-cover" alt="">
-                        <div class="p-4">
-                            <div class="flex justify-between items-start">
-                                <h3 class="font-bold text-lg">{{ $a->name }}</h3>
-                                <div class="font-semibold whitespace-nowrap">{{ number_format($a->price,2) }} ₴</div>
+            <div class="cards-container">
+                <form method="GET" class="filter-bar">
+                    <input type="text" name="q" placeholder="Пошук..." value="{{ request('q') }}">
+
+                    <select name="category_id">
+                        <option value="">Усі категорії</option>
+                        @foreach($categories as $cat)
+                            <option value="{{ $cat->id }}" @selected(request('category_id') == $cat->id)>
+                                {{ $cat->name }}
+                            </option>
+                        @endforeach
+                    </select>
+
+                    <label>Ціна від:
+                        <input type="number" name="min" value="{{ request('min') }}">
+                    </label>
+                    <label>до:
+                        <input type="number" name="max" value="{{ request('max') }}">
+                    </label>
+
+                    <button type="submit" class="btn">🔍 Фільтрувати</button>
+                    <a href="{{ route('animals.index') }}" class="btn clear">Скинути</a>
+                </form>
+
+            @foreach($animals as $animal)
+                    <div class="animal-card" data-id="{{ $animal->id }}">
+                        <div class="animal-image">
+                            @if($animal->image)
+                                <img src="{{ asset('storage/' . $animal->image) }}" alt="{{ $animal->name }}">
+                            @else
+                                <div class="no-photo">📷 Без фото</div>
+                            @endif
+                        </div>
+
+                        <div class="animal-info">
+                            <div class="animal-text">
+                                <h2>{{ $animal->name }}</h2>
+                                <p class="species">{{ $animal->species }} • {{ $animal->age }} р.</p>
+                                <p class="desc">{{ Str::limit($animal->description, 90) }}</p>
                             </div>
-                            <div class="text-sm text-gray-500">
-                                {{ $a->category->name ?? $a->species }} • вік: {{ $a->age }}
-                            </div>
-                            <div class="mt-3 flex gap-2">
-                                <a href="{{ route('animals.show',$a) }}" class="btn btn-yellow">Детальніше</a>
-                                <form action="{{ route('cart.add',$a) }}" method="POST" class="inline">@csrf
-                                    <button class="btn btn-blue">У кошик</button>
-                                </form>
+
+                            <div class="animal-bottom">
+                                <p class="price">{{ number_format($animal->price, 0, ',', ' ') }} ₴</p>
+
+                                <div class="buttons">
+                                    <a href="{{ route('animals.show', $animal) }}" class="btn details">Детальніше</a>
+
+
+                                    <button class="btn cart-btn"
+                                            data-id="{{ $animal->id }}"
+                                            data-name="{{ $animal->name }}"
+                                            data-price="{{ $animal->price }}">
+                                        🛒 До кошика
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 @endforeach
             </div>
-            <div class="mt-6">{{ $animals->links() }}</div>
         @else
-            <p class="text-gray-500">Каталог поки порожній 🐕</p>
+            <p class="empty">Каталог поки порожній 🐶</p>
         @endif
     </div>
+
+    {{-- МОДАЛЬНЕ ВІКНО --}}
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span id="modal-close" class="close">&times;</span>
+            <img id="modal-image" src="" alt="">
+            <h2 id="modal-name"></h2>
+            <p id="modal-species"></p>
+            <p id="modal-age"></p>
+            <p id="modal-desc"></p>
+            <p id="modal-price" class="price"></p>
+        </div>
+    </div>
+
 @endsection
+
+@push('modals')
+    {{-- МОДАЛЬНЕ ВІКНО --}}
+    <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            <span id="modal-close" class="close">&times;</span>
+            <img id="modal-image" src="" alt="">
+            <h2 id="modal-name"></h2>
+            <p id="modal-species"></p>
+            <p id="modal-age"></p>
+            <p id="modal-desc"></p>
+            <p id="modal-price" class="price"></p>
+        </div>
+    </div>
+
+    {{-- МОДАЛЬНЕ ВІКНО ДЛЯ КОШИКА --}}
+    <div id="cartModal" class="modal hidden">
+        <div class="modal-content small">
+            <span id="cart-close" class="close">&times;</span>
+            <h3>Додати до кошика</h3>
+            <p id="cart-item-name"></p>
+            <p>Ціна: <span id="cart-item-price"></span> ₴</p>
+
+            <form id="cart-form" method="POST" action="{{ route('cart.add', ['animal' => 0]) }}">
+                @csrf
+                <input type="hidden" name="animal_id" id="animal_id">
+                <label>Кількість:</label>
+                <input type="number" name="quantity" id="quantity" value="1" min="1" max="10">
+                <button type="submit" class="btn cart">Підтвердити</button>
+            </form>
+        </div>
+    </div>
+@endpush
+

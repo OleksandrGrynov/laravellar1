@@ -8,8 +8,11 @@
             <div>Email: {{ $order->customer_email ?? '—' }}</div>
             <div>Сума: <b>{{ number_format($order->total,2) }} ₴</b></div>
             <div>Статус: <b>{{ $order->status }}</b></div>
-            <form class="mt-3" method="POST" action="{{ route('admin.orders.status',$order) }}">
-                @csrf @method('PATCH')
+            <p><strong>Категорія:</strong> {{ $animal->category->name ?? '—' }}</p>
+
+            <form method="POST" action="{{ route('admin.updateStatus', $order) }}">
+
+            @csrf @method('PATCH')
                 <select name="status" class="border rounded p-2">
                     @foreach(['new','paid','shipped','done','canceled'] as $s)
                         <option value="{{ $s }}" @selected($order->status==$s)>{{ $s }}</option>
